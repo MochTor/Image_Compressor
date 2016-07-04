@@ -1,5 +1,5 @@
 #ifndef image_handler
-#define  image_handler
+#define image_handler
 
 //The following structs define a pixel of the image
 typedef struct _pixel {
@@ -14,5 +14,7 @@ typedef struct _image {
     int y;
     pixel color;
 } image;
+
+image *openImage(const char *);
 
 #endif
