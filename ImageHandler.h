@@ -1,20 +1,18 @@
 #ifndef image_handler
 #define image_handler
 
-//The following structs define a pixel of the image
-typedef struct _pixel {
-    //I could use unsigned char instead of short int 'cause P6 component limit is 255
-    unsigned short int red;
-    unsigned short int green;
-    unsigned short int blue;
-} pixel;
+//The following structures define a pixel of the image
+typedef struct {
+     unsigned char red,green,blue;
+} PPMPixel;
 
-typedef struct _image {
-    int x;
-    int y;
-    pixel color;
-} image;
+typedef struct {
+     int x, y;
+     PPMPixel *data;
+} PPMImage;
+//
 
-image *openImage(const char *);
+void writePPM(const char *, PPMImage *);
+PPMImage *readPPM(const char *);
 
 #endif
