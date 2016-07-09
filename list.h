@@ -23,7 +23,7 @@ struct color* init(PPMPixel);
  * @param  struct color:  the list to search in
  * @return          1 if found, 0 if not
  */
-int search(PPMPixel, struct color **);
+int search(PPMPixel);
 
 /**
  * This function add a new entry into the palette list

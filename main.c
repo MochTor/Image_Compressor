@@ -19,9 +19,9 @@ int colorList(PPMImage *);
 int main(int argc, char const *argv[]) {
     PPMImage *image;
     image = readPPM(argv[1]);
-    fprintf(stderr, "Lettura immagine PPM eseguita\n");
+    fprintf(stderr, "PPM image properly read\n");
     int colorNumber = colorList(image);
-    fprintf(stderr, "colora: #%d\n", colorNumber);
+    fprintf(stderr, "Colors: #%d\n", colorNumber);  //Tested with GIMP color analizer: it works properly
     return 0;
 }
 
@@ -30,17 +30,16 @@ void compressImage(PPMImage *image) {
 }
 
 int colorList(PPMImage *image){
-	int CNumber = 0;
+	int colorNumber = 0;
 	PPMPixel pixel;
-    int numero_colori = 0;
     for (int i =0; i < image->x * image->y;i++) {
         pixel.red = image->data[i].red;
         pixel.green = image->data[i].green;
         pixel.blue = image->data[i].blue;
-        if (search(pixel, NULL) == 0) {
-                //add_to_list(pix);
-                numero_colori++;
+        if (search(pixel) == 0) {
+                add(pixel);
+                colorNumber++;
         }
     }
-    return numero_colori;
+    return colorNumber;
 }
