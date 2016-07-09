@@ -15,10 +15,13 @@ void compressImage(PPMImage *);
 void findFrequency();
 int colorList(PPMImage *);
 
+
 int main(int argc, char const *argv[]) {
     PPMImage *image;
     image = readPPM(argv[1]);
     fprintf(stderr, "Lettura immagine PPM eseguita\n");
+    int colorNumber = colorList(image);
+    fprintf(stderr, "colora: #%d\n", colorNumber);
     return 0;
 }
 

@@ -65,7 +65,8 @@ PPMImage *readPPM(const char *filename) {
     //check for comments
     c = getc(fp);
     while (c == '#') {
-    while (getc(fp) != '\n') ;
+    while (getc(fp) != '\n')
+    ;
          c = getc(fp);
     }
 
