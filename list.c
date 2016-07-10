@@ -24,7 +24,6 @@ struct color* init(PPMPixel pixel) {
 
 int search(PPMPixel pixel){
     struct color *current = paletteHead;
-    int found = 0;
 
     while (current != NULL) {
         if (current->red == pixel.red && current->green == pixel.green && current->blue == pixel.blue) {
@@ -42,6 +41,7 @@ struct color* add(PPMPixel pixel){
     if (paletteHead == NULL)
         return (init(pixel));
 
+
     struct color *new = (struct color*) malloc(sizeof(struct color));
     new->frequency = 1;
     new->red = pixel.red;
@@ -53,4 +53,14 @@ struct color* add(PPMPixel pixel){
     lastElement = new;
 
     return new;
+}
+
+void printColor() {
+    struct color *sample;
+    sample = paletteHead;
+    int i;
+    for (i = 0; i < 35345; i++) {
+        sample = sample->next;
+    }
+    fprintf(stdout, "RGB of %dth color: %d, %d, %d\n", i, (int) sample->red, (int) sample->green, (int) sample->blue);
 }

@@ -16,7 +16,6 @@ struct color {
  */
 struct color* init(PPMPixel);
 
-//This function search a color in color palette list
 /**
  * This function search a color in color palette list
  * @param  PPMPixel: the color
@@ -31,5 +30,8 @@ int search(PPMPixel);
  * @return          the new node
  */
 struct color* add(PPMPixel);
+
+//Just a fuction used in test
+void printColor();
 
 #endif
