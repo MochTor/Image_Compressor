@@ -31,6 +31,12 @@ int search(PPMPixel);
  */
 struct color* add(PPMPixel);
 
+/**
+ * The function return the head pointer of the palette list
+ * @return the pointer to the head of the list
+ */
+struct color* returnHead();
+
 //Just a fuction used in test
 void printColor();
 

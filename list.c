@@ -55,6 +55,10 @@ struct color* add(PPMPixel pixel){
     return new;
 }
 
+struct color* returnHead() {
+    return paletteHead;
+}
+
 void printColor() {
     struct color *sample;
     sample = paletteHead;
