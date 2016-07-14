@@ -4,8 +4,8 @@
 //Palette struct
 struct color {
     int frequency;  //times the color appears in the image
-    unsigned char red,green,blue;   //RGB riplet value
-    struct color *next; //next pointer to next color in list
+    unsigned char red,green,blue;   //RGB triplet value
+    struct color *next; //pointer to next color in list
 };
 //
 
