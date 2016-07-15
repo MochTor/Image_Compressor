@@ -14,11 +14,11 @@ typedef struct {
 //
 
 void compressImage(PPMImage *, myImage *, int);
-void findFrequency(struct color*, int);
 int colorList(PPMImage *);
 int maxFrequency(struct color*);
 int* frequencyVector(struct color *el);
 double findDistance(PPMPixel,PPMPixel);
+//void findFrequency(struct color*, int);
 
 int main(int argc, char const *argv[]) {
     PPMImage *image;
@@ -58,29 +58,6 @@ void compressImage(PPMImage *image, myImage *resultImage, int colorNumber) {
 
     //Finding first 256 color frequencies in the image and creating a vector for them
     frequencies = frequencyVector(colorPointer);
-
-    //-----Just for test-------
-    //int ii;
-    // for (ii = 0; ii < 256; ii++) {
-    //     printf("Frequency N %d: %d\n", ii, frequencies[ii]);
-    // }
-    //int max = maxFrequency(colorPointer);
-    //printf("Max frequency: %d\n", max);
-    //findFrequency(colorPointer, frequencies[0]);
-    //printf("Color with maximum frequency: %d, %d, %d\n", maxColor->red, maxColor->green, maxColor->blue);
-
-    //For the moment, I've just put the first 256 colors of the palette, without filtering them
-    // while (i < paletteSize) {
-    //     resultImage->colors[i].red = colorPointer->red;
-    //     resultImage->colors[i].red = colorPointer->red;
-    //     resultImage->colors[i].red = colorPointer->red;
-    //     //printf("Filling palette with color number %d; values: %d, %d, %d, with frequency %d \n", i+1, resultImage->colors[i].red, resultImage->colors[i].green, resultImage->colors[i].blue, colorPointer->frequency);
-    //
-    //     colorPointer = colorPointer->next;
-    //
-    //     i++;
-    // }
-    //-----------------------
 
     //Filling palette with first 256 most frequent colors
     int j = 0;
@@ -170,6 +147,11 @@ int colorList(PPMImage *image){
     return colorNumber;
 }
 
+/**
+ * The function return the maximum frequency number for a color in the palette
+ * @param  el: pointer to palette
+ * @return    the frequency number
+ */
 int maxFrequency(struct color* el) {
     int max = 0;
     while (el) {
@@ -209,6 +191,23 @@ int* frequencyVector(struct color *head) {
     return frequencyArray;
 }
 
+/**
+ * This function return the distance between two RGB colors
+ * CIE76 formula was used
+ * @param  pixel1: first color
+ * @param  pixel2: second color
+ * @return        the distance
+ */
+double findDistance(PPMPixel pixel1,PPMPixel pixel2) {
+    double distance;
+    int redComp = pixel1.red - pixel2.red;
+    int greenComp = pixel1.green -pixel2.green;
+    int blueComp = pixel1.blue -pixel2.blue;
+    distance = (redComp*redComp + greenComp*greenComp + blueComp*blueComp);
+    distance = sqrt(distance);
+    return  distance;
+}
+
 void findFrequency(struct color* el, int requiredFrequency) {
     printf("Colors with frequency equals to %d are: \n", requiredFrequency);
     while (el) {
@@ -216,14 +215,4 @@ void findFrequency(struct color* el, int requiredFrequency) {
         printf("RGB: %d, %d, %d\n", el->red, el->green, el->blue);
         el = el->next;
     }
-}
-
-double findDistance(PPMPixel p1,PPMPixel p2) {
-    double distance;
-    int redComp = p1.red - p2.red;
-    int greenComp = p1.green -p2.green;
-    int blueComp = p1.blue -p2.blue;
-    distance = (redComp*redComp + greenComp*greenComp + blueComp*blueComp);
-    distance = sqrt(distance);
-    return  distance;
 }
