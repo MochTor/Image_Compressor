@@ -18,6 +18,7 @@ int colorList(PPMImage *);
 int maxFrequency(struct color*);
 int* frequencyVector(struct color *el);
 double findDistance(PPMPixel,PPMPixel);
+double findDistanceC(struct color *, PPMPixel);
 //void findFrequency(struct color*, int);
 
 int main(int argc, char const *argv[]) {
@@ -60,14 +61,31 @@ void compressImage(PPMImage *image, myImage *resultImage, int colorNumber) {
     frequencies = frequencyVector(colorPointer);
 
     //Filling palette with first 256 most frequent colors
-    int j = 0;
-    for (i = 0; i < paletteSize; i++) {
+    int j = 0;  //index for final color palette
+    int k;
+    short int alpha = 300;    //decisional value
+    double minDistance;
+    int trovato = 0;
+    for (i = 0; i < paletteSize && frequencies[i] != 0; i++) {  //moving through frequency values
         while (colorPointer) {
             if (colorPointer->frequency == frequencies[i] && j < 256) {
-                resultImage->colors[j].red = colorPointer->red;
-                resultImage->colors[j].green = colorPointer->green;
-                resultImage->colors[j].blue = colorPointer->blue;
-                j++;
+                if (j == 0) {
+                    resultImage->colors[j].red = colorPointer->red;
+                    resultImage->colors[j].green = colorPointer->green;
+                    resultImage->colors[j].blue = colorPointer->blue;
+                    j++;
+               } else
+                for ( k = 0; k < j && !trovato; k++) { //moving thorugh previus colors in final color palette
+                    minDistance = findDistanceC(colorPointer, resultImage->colors[k]);
+                    if (minDistance > alpha) {
+                        resultImage->colors[j].red = colorPointer->red;
+                        resultImage->colors[j].green = colorPointer->green;
+                        resultImage->colors[j].blue = colorPointer->blue;
+                        j++;
+                        trovato = 1;
+                     }
+                 }
+
             }
             colorPointer = colorPointer->next;
         }
@@ -80,8 +98,6 @@ void compressImage(PPMImage *image, myImage *resultImage, int colorNumber) {
     resultImage->pSize = paletteSize;
 
     int paletteIndex;
-    double minDistance;
-    int trovato;
     for(i = 0; i < image->x * image->y; i++){
         paletteIndex = 0;
         trovato = 0;
@@ -192,7 +208,7 @@ int* frequencyVector(struct color *head) {
 }
 
 /**
- * This function return the distance between two RGB colors
+ * This function return the distance between two RGB colors (PPMPixel version)
  * CIE76 formula was used
  * @param  pixel1: first color
  * @param  pixel2: second color
@@ -203,6 +219,23 @@ double findDistance(PPMPixel pixel1,PPMPixel pixel2) {
     int redComp = pixel1.red - pixel2.red;
     int greenComp = pixel1.green -pixel2.green;
     int blueComp = pixel1.blue -pixel2.blue;
+    distance = (redComp*redComp + greenComp*greenComp + blueComp*blueComp);
+    distance = sqrt(distance);
+    return  distance;
+}
+
+/**
+ * This function return the distance between two RGB colors (struct color version)
+ * CIE76 formula was used
+ * @param  pixel1: first color
+ * @param  pixel2: second color
+ * @return        the distance
+ */
+double findDistanceC(struct color *pixel1, PPMPixel pixel2) {
+    double distance;
+    int redComp = pixel1->red - pixel2.red;
+    int greenComp = pixel1->green -pixel2.green;
+    int blueComp = pixel1->blue -pixel2.blue;
     distance = (redComp*redComp + greenComp*greenComp + blueComp*blueComp);
     distance = sqrt(distance);
     return  distance;
