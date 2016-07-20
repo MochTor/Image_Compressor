@@ -26,6 +26,7 @@ int main(int argc, char const *argv[]) {
     int colorNumber;
     image = readPPM(argv[1]);
     fprintf(stderr, "PPM image properly read\n");
+    fprintf(stderr, "Analyzing image\n");
     colorNumber = colorList(image);
     //fprintf(stderr, "Colors: #%d\n", colorNumber);  //Tested with GIMP color analizer: it works properly
     compressImage(image, compressedRawImage, colorNumber);
@@ -66,70 +67,80 @@ void compressImage(PPMImage *image, myImage *resultImage, int colorNumber) {
     int j = 0;  //added color index
     int i1, i2, i3, i4, i5, i6, i7, i8; //index for counting colors found in subcubes (tracking count for equal distribution)
     i1 = i2 = i3 = i4 = i5 = i6 = i7 = i8 = 0;
-    for (i = 0; i < paletteSize; i++) {
-        while (colorPointer) {
-            if (colorPointer->frequency == frequencies[i] && j < 256) {
-                if (colorPointer->red > 126 && colorPointer->green < 127 && colorPointer->blue < 127 && i1 < 32) {
-                    resultImage->colors[j].red = colorPointer->red;
-                    resultImage->colors[j].green = colorPointer->green;
-                    resultImage->colors[j].blue = colorPointer->blue;
-                    j++;
-                    i1++;
-                } else if (colorPointer->red > 126 && colorPointer->green < 127 && colorPointer->blue > 126 && i2 < 32) {
-                    resultImage->colors[j].red = colorPointer->red;
-                    resultImage->colors[j].green = colorPointer->green;
-                    resultImage->colors[j].blue = colorPointer->blue;
-                    j++;
-                    i2++;
-                } else if (colorPointer->red > 126 && colorPointer->green > 126 && colorPointer->blue > 126 && i3 < 32) {
-                    resultImage->colors[j].red = colorPointer->red;
-                    resultImage->colors[j].green = colorPointer->green;
-                    resultImage->colors[j].blue = colorPointer->blue;
-                    j++;
-                    i3++;
-                } else if (colorPointer->red > 126 && colorPointer->green > 126 && colorPointer->blue < 127 && i4 < 32) {
-                    resultImage->colors[j].red = colorPointer->red;
-                    resultImage->colors[j].green = colorPointer->green;
-                    resultImage->colors[j].blue = colorPointer->blue;
-                    j++;
-                    i4++;
-                } else if (colorPointer->red < 127 && colorPointer->green < 127 && colorPointer->blue < 127 && i5 < 32) {
-                    resultImage->colors[j].red = colorPointer->red;
-                    resultImage->colors[j].green = colorPointer->green;
-                    resultImage->colors[j].blue = colorPointer->blue;
-                    j++;
-                    i5++;
-                } else if (colorPointer->red < 127 && colorPointer->green < 127 && colorPointer->blue > 126 && i6 < 32) {
-                    resultImage->colors[j].red = colorPointer->red;
-                    resultImage->colors[j].green = colorPointer->green;
-                    resultImage->colors[j].blue = colorPointer->blue;
-                    j++;
-                    i6++;
-                } else if (colorPointer->red < 127 && colorPointer->green > 126 && colorPointer->blue > 126 && i7 < 32) {
-                    resultImage->colors[j].red = colorPointer->red;
-                    resultImage->colors[j].green = colorPointer->green;
-                    resultImage->colors[j].blue = colorPointer->blue;
-                    j++;
-                    i7++;
-                } else if (colorPointer->red < 127 && colorPointer->green > 126 && colorPointer->blue < 127 && i8 < 32) {
-                    resultImage->colors[j].red = colorPointer->red;
-                    resultImage->colors[j].green = colorPointer->green;
-                    resultImage->colors[j].blue = colorPointer->blue;
-                    j++;
-                    i8++;
-                }
-            }
+
+    if (paletteSize < 256) {
+        for (i = 0; i < paletteSize; i++) {
+            resultImage->colors[j].red = colorPointer->red;
+            resultImage->colors[j].green = colorPointer->green;
+            resultImage->colors[j].blue = colorPointer->blue;
+            j++;
             colorPointer = colorPointer->next;
         }
-        colorPointer = returnHead();
-    }
+    } else
+        for (i = 0; i < paletteSize; i++) {
+            while (colorPointer) {
+                if (colorPointer->frequency == frequencies[i] && j < 256) {
+                    if (colorPointer->red > 126 && colorPointer->green < 127 && colorPointer->blue < 127 && i1 < 32) {
+                        resultImage->colors[j].red = colorPointer->red;
+                        resultImage->colors[j].green = colorPointer->green;
+                        resultImage->colors[j].blue = colorPointer->blue;
+                        j++;
+                        i1++;
+                    } else if (colorPointer->red > 126 && colorPointer->green < 127 && colorPointer->blue > 126 && i2 < 32) {
+                        resultImage->colors[j].red = colorPointer->red;
+                        resultImage->colors[j].green = colorPointer->green;
+                        resultImage->colors[j].blue = colorPointer->blue;
+                        j++;
+                        i2++;
+                    } else if (colorPointer->red > 126 && colorPointer->green > 126 && colorPointer->blue > 126 && i3 < 32) {
+                        resultImage->colors[j].red = colorPointer->red;
+                        resultImage->colors[j].green = colorPointer->green;
+                        resultImage->colors[j].blue = colorPointer->blue;
+                        j++;
+                        i3++;
+                    } else if (colorPointer->red > 126 && colorPointer->green > 126 && colorPointer->blue < 127 && i4 < 32) {
+                        resultImage->colors[j].red = colorPointer->red;
+                        resultImage->colors[j].green = colorPointer->green;
+                        resultImage->colors[j].blue = colorPointer->blue;
+                        j++;
+                        i4++;
+                    } else if (colorPointer->red < 127 && colorPointer->green < 127 && colorPointer->blue < 127 && i5 < 32) {
+                        resultImage->colors[j].red = colorPointer->red;
+                        resultImage->colors[j].green = colorPointer->green;
+                        resultImage->colors[j].blue = colorPointer->blue;
+                        j++;
+                        i5++;
+                    } else if (colorPointer->red < 127 && colorPointer->green < 127 && colorPointer->blue > 126 && i6 < 32) {
+                        resultImage->colors[j].red = colorPointer->red;
+                        resultImage->colors[j].green = colorPointer->green;
+                        resultImage->colors[j].blue = colorPointer->blue;
+                        j++;
+                        i6++;
+                    } else if (colorPointer->red < 127 && colorPointer->green > 126 && colorPointer->blue > 126 && i7 < 32) {
+                        resultImage->colors[j].red = colorPointer->red;
+                        resultImage->colors[j].green = colorPointer->green;
+                        resultImage->colors[j].blue = colorPointer->blue;
+                        j++;
+                        i7++;
+                    } else if (colorPointer->red < 127 && colorPointer->green > 126 && colorPointer->blue < 127 && i8 < 32) {
+                        resultImage->colors[j].red = colorPointer->red;
+                        resultImage->colors[j].green = colorPointer->green;
+                        resultImage->colors[j].blue = colorPointer->blue;
+                        j++;
+                        i8++;
+                    }
+                }
+                colorPointer = colorPointer->next;
+            }
+            colorPointer = returnHead();
+        }
     //printf("%d %d %d %d %d %d %d %d\n", i1, i2, i3, i4, i5, i6, i7, i8);
 
     printf("Compressing image\n");
     //Create compressed image
     resultImage->x = image->x;
     resultImage->y = image->y;
-    resultImage->pSize = paletteSize;
+    resultImage->pSize = i1 + i2 + i3 + i4 + i5 +i6 + i7 + i8;
 
     double minDistance;
     int flag = 0;
